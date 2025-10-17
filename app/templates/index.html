@@ -1,0 +1,48 @@
+
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NURI Piknik v5</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#0b1220; color:#f5f7ff; margin:0; }
+    header { padding:16px; font-weight:700; }
+    main { padding:16px; max-width:720px; margin:auto; }
+    .card { background:#111a2b; border:1px solid #1f2b45; border-radius:16px; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    button { padding:10px 14px; border-radius:12px; border:1px solid #2a3b62; background:#0e1a33; color:#fff; cursor:pointer; }
+    button:hover { background:#132346; }
+    .log { margin-top:12px; white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#0a1324; padding:12px; border-radius:12px; }
+    .hint { opacity:.75; font-size:12px; }
+  </style>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>NURI Piknik v5 • Render test</header>
+  <main>
+    <div class="card">
+      <div class="row">
+        <button id="btnPing">Ping server</button>
+        <span class="hint">Max users: {{ max_users }}</span>
+      </div>
+      <div id="log" class="log">Hazır…</div>
+    </div>
+  </main>
+  <script>
+    const log = (t) => {
+      const el = document.getElementById("log");
+      el.textContent += "\n" + t;
+      el.scrollTop = el.scrollHeight;
+    };
+
+    const socket = io();
+    socket.on("connect", () => log("SocketIO connected."));
+    socket.on("server_message", (d) => log(d.msg));
+
+    document.getElementById("btnPing").addEventListener("click", () => {
+      socket.emit("ping_server", "merhaba 👋");
+    });
+  </script>
+</body>
+</html>
